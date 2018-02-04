@@ -2,14 +2,16 @@ function copyAsProto(A,B){
   for(let prop of Object.getOwnPropertyNames(B)){A[prop] = B[prop];Object.defineProperty(A,prop,{enumerable:0})}
 }
 function copyProto(A,B){
-  for(let prop of Object.getOwnPropertyNames(B.prototype)){
-    A.prototype[prop] = B.prototype[prop];
+  let proto = getProto(B)
+  for(let prop of Object.getOwnPropertyNames(proto)){
+    A.prototype[prop] = proto[prop];
     Object.defineProperty(A.prototype,prop,{enumerable:0})
   }
 }
 
 function getProto(obj){
-  if(typeof obj=='function'){return obj.prototype}
+  if(typeof obj=='function' && isClass(obj) && obj.interface){return obj.interface}
+  else if(typeof obj=='function'){return obj.prototype}
   else if(obj&&obj.prototype){return obj.prototype}
   else if(obj){return obj}
   return null
