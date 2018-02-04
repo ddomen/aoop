@@ -1,0 +1,26 @@
+{
+  "name": "aoop",
+  "version": "1.0.0",
+  "description": "Augmented Object Oriented Programming",
+  "main": "aoop.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ddomen/aoop.git"
+  },
+  "keywords": [
+    "object",
+    "programming",
+    "class",
+    "interface",
+    "subclass"
+  ],
+  "author": "Daniele Domenichelli <daniele.domenichelli.5@gmail.com>",
+  "license": "LICENSE",
+  "bugs": {
+    "url": "https://github.com/ddomen/aoop/issues"
+  },
+  "homepage": "https://github.com/ddomen/aoop#readme"
+}
