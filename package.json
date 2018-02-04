@@ -1,6 +1,6 @@
 {
   "name": "aoop",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Augmented Object Oriented Programming",
   "main": "aoop.js",
   "scripts": {
