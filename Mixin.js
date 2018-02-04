@@ -10,8 +10,8 @@ module.exports = function Mixin(A,B,...cls){
       if(typeof B.prototype.onMixin=='function'){B.prototype.onMixin.call(this,A,B,...args)}
     }
   }];
-  utils.copyProto(ext[0],A);
   utils.copyProto(ext[0],B);
+  utils.copyProto(ext[0],A);
 
   return ext[0];
 };
