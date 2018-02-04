@@ -79,7 +79,7 @@ d.baz();  //Baz from B! (the Mixin(B,A) takes B > A hierachy)
 This function constrain a constructor of a class (or a particular object) to have some methods defined in the `proto` argument. `constrain` argument tell the Interface to instanciate methods from his `proto` to the extended class.
 You can create an object from an Interface too using default methods described in the Interface `proto`. The Interface's instance constructor take a `force` argument to tell the instance to use Interface's `proto` defaults methods.
 ```javascript
-const { Interface, Utils } = require('./aoop');
+const { Interface, Utils } = require('aoop');
 
 //Creating Interface that must have "bye" method
 var proto = {
