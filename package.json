@@ -15,7 +15,9 @@
     "programming",
     "class",
     "interface",
-    "subclass"
+    "subclass",
+    "mixin",
+    "node"
   ],
   "author": "Daniele Domenichelli <daniele.domenichelli.5@gmail.com>",
   "license": "LICENSE",

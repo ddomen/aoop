@@ -21,6 +21,6 @@ function Interface(proto,constrain){
 }
 
 class InterfaceError extends Error{constructor(message){super(message);this.name='InterfaceError';}}
-Interface.Error = InterfaceError;
+Object.defineProperty(Interface,'Error',{enumerable:0,configurable:0,writable:0,value:InterfaceError})
 
 module.exports = Interface;
