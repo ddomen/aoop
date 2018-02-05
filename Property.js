@@ -33,7 +33,7 @@ function Property(object,properties){
     return this;
   }})
   Object.defineProperty(this,'type',{enumerable:1,configurable:0,writable:0,value(v){
-    if(typeof v=='undefined'){return type}
+    if(typeof v=='undefined' && v.length==1){return type}
     if(!locked&&!readonly){
       if(typeof v=='function'){type=v;}
       else if(typeof v!='undefined' && v!=null){
@@ -95,5 +95,7 @@ Property.setValue = function(property,value){PropertySetAccessor.get(property)(v
 
 class PropertyError extends Error{constructor(message){super(message);this.name='PropertyError';}}
 Property.Error = PropertyError;
+
+Property.version = '1.0.0';
 
 module.exports = Property;
