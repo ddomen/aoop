@@ -160,7 +160,7 @@ console.log(Property.getValue(privateProp)) // "this is a private property"
 
 x.public = 5;
 x.public2 = 'I can\'t change non writtable property';
-x.public3 = 'I can'\t change readonly property';
+x.public3 = 'I can\'t change readonly property';
 x.private = 'I can\'t change private property in this way';
 console.log(x.public);  // 5
 console.log(x.public2); // "another public non writable property"
