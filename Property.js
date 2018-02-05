@@ -82,6 +82,9 @@ class Property{
     PropertyAccessor.set(this,()=>getter(value))
   }
 
+  inspect(){return this.value}
+  toString(){return this.value}
+  toJSON(){return this.value}
   valueOf(){return this.value}
 
   static getValue(property){return PropertyAccessor.get(property)()}
