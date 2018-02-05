@@ -128,7 +128,7 @@ h.bye();  //good bye from Hello
 
 This class allow to deal with a `reference` object property with some helping methods.
 
-A Property can change this descriptors:
+A Property can change this descriptors with corresponding method:
   - enumerable *( visibility in iterable objects and for loops )*
   - writable *( possibility to change property value )*
   - configurable *( possibility to change property descriptors )*
@@ -137,8 +137,15 @@ A Property has some particular methods (accessor) to easily modify descriptors a
   - readonly *( possibility to chage descriptors )*
   - lock / unlock *( possibility to change any descriptor or value accessor )*
   - lockConfiguration *( locks property descriptors - WARN this operation can't be restored )*
+  - getter *( a function(value) that compute the reading value when requested - WARN the getter function must have exactly one parameter )*
+  - setter *( a function(newValue, oldValue) that compute writing value when requested - WARN the setter function must have exactly two parameters )*
+
+Every both descriptors and accessors methods have a getter and setter duality: if no argument is passed the function return the value, for example `property.enumerable()` return `true|false`. If an argument is passed the function set the correct value and then return th Property reference, making possible the concatention; for example `property.enumerable(true).writable(false).lock()`.
 
 For retrive a private property you need to store the Property reference and pass it to `Property.getValue(Property)` static method. To set a private property just pass the Property reference to `Property.setValue(Property, value)` and give it a value. Remember that descriptors and accessors still apply on those static methods.
+
+A Property can be forced to be of a certain type, a `Number` for example. It is possible to set a `type [function(value)]` to costrain the setted value to be parsed. It is possible to pass a string as `object|string|number|boolean|function|any` to force the value to those types or passing own function *( WARN the type function must have exactly one parameter )*.
+
 ```javascript
 const { Property } = require('aoop');
 
