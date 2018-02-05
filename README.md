@@ -38,7 +38,7 @@ const aoop = require('aoop');
 //}
 
 ```
-* **Mixin** `Mixin(class A,class B,[... classes])`
+* **Mixin**  `Mixin(class A,class B,[... classes])`
 
 This function takes all methods from two or more classes (or constructor functions) and create another one that inherits all of them from the mixins classes. Remember that the hierarchy of inheritance goes from left to right
 ```javascript
@@ -74,7 +74,7 @@ d.foo();  //foo
 d.bar();  //bar
 d.baz();  //Baz from B! (the Mixin(B,A) takes B > A hierachy)
 ```
-* **Interface** `Interface(proto, constrain)`
+* **Interface**  `Interface(proto, constrain)`
 
 This function constrain a constructor of a class (or a particular object) to have some methods defined in the `proto` argument. `constrain` argument tell the Interface to instanciate methods from his `proto` to the extended class.
 You can create an object from an Interface too using default methods described in the Interface `proto`. The Interface's instance constructor take a `force` argument to tell the instance to use Interface's `proto` defaults methods.
@@ -123,6 +123,65 @@ e.bye();  //good bye from E
 f.bye();  //good bye from Hello
 h.bye();  //good bye from Hello
 ```
+
+* **Property**  `Property(reference, properties)`
+
+This class allow to deal with a `reference` object property with some helping methods.
+
+A Property can change this descriptors:
+  - enumerable *( visibility in iterable objects and for loops )*
+  - writable *( possibility to change property value )*
+  - configurable *( possibility to change property descriptors )*
+
+A Property has some particular methods (accessor) to easily modify descriptors and value accessor:
+  - readonly *( possibility to chage descriptors )*
+  - lock / unlock *( possibility to change any descriptor or value accessor )*
+  - lockConfiguration *( locks property descriptors - WARN this operation can't be restored )*
+
+For retrive a private property you need to store the Property reference and pass it to `Property.getValue(Property)` static method. To set a private property just pass the Property reference to `Property.setValue(Property, value)` and give it a value. Remember that descriptors and accessors still apply on those static methods.
+```javascript
+const { Property } = require('aoop');
+
+var x = {};
+var publicProp = 
+  new Property(x,{name:'public',value:4});
+var privateProp = 
+  new Property(x,{name:'private',value:'this is a private property',accessor:'private'})
+var publicProp2 = 
+  new Property(x,{name:'public2',value:'another public non writable property',writable:false})
+var publicProp3 = 
+  new Property(x,{name:'public3',value:'another public readonly property',readonly:true})
+
+console.log(x.public);  // 4
+console.log(x.public2);  // "another public non writable property"
+console.log(x.public3);  // "another public readonly property"
+console.log(x.private); // undefined
+console.log(Property.getValue(privateProp)) // "this is a private property"
+
+x.public = 5;
+x.public2 = 'I can\'t change non writtable property';
+x.public3 = 'I can'\t change readonly property';
+x.private = 'I can\'t change private property in this way';
+console.log(x.public);  // 5
+console.log(x.public2); // "another public non writable property"
+console.log(x.public3); // "another public readonly property"
+console.log(x.private); // undefined
+console.log(Property.getValue(privateProp)) // "this is a private property"
+
+publicProp.writable(false);
+publicProp2.writable(true);
+publicProp3.writable(true);
+x.public = 'Now I can\'t change this property';
+x.public2 = 'And now I can change this property';
+x.public3 = 'But still can\'t change this readonly property';
+Property.setValue(privateProp,'I can change private property so')
+console.log(x.public);  // 5
+console.log(x.public2);  // "And now I can change this property"
+console.log(x.public3);  // "another public readonly property"
+console.log(x.private); // undefined
+console.log(Property.getValue(privateProp)) // "I can change private property so"
+```
+
 * **Utils**
 This object is a library of some tools for deal with functions.
 
