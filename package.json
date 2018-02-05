@@ -1,6 +1,6 @@
 {
   "name": "aoop",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Augmented Object Oriented Programming",
   "main": "aoop.js",
   "scripts": {
@@ -15,7 +15,9 @@
     "programming",
     "class",
     "interface",
-    "subclass"
+    "subclass",
+    "mixin",
+    "node"
   ],
   "author": "Daniele Domenichelli <daniele.domenichelli.5@gmail.com>",
   "license": "LICENSE",

@@ -26,5 +26,6 @@ module.exports = {
   copyAsProto:copyAsProto,
   extend:extend,
   getProto:getProto,
-  isClass:isClass
+  isClass:isClass,
+  version:'1.0.0'
 };
