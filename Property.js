@@ -1,4 +1,5 @@
-const PropertyAccessor = new WeakMap();
+const PropertyGetAccessor = new WeakMap();
+const PropertySetAccessor = new WeakMap();
 
 class Property{
   constructor(object,properties){
@@ -27,7 +28,7 @@ class Property{
       if(!locked&&!readonly){configurable=!!v;}
       return this
     }})
-    Object.defineProperty(this,'readonly',{enumerable:1,configurable:0,writable:0,value(){
+    Object.defineProperty(this,'readonly',{enumerable:1,configurable:0,writable:0,value(v){
       if(typeof v=='undefined'){return readonly}
       if(!locked){readonly=!!v;}
       return this;
@@ -50,19 +51,19 @@ class Property{
       }
       return this
     }})
-    Object.defineProperty(this,'getter',{enumerable:1,configurable:0,writable:0,value(){
+    Object.defineProperty(this,'getter',{enumerable:1,configurable:0,writable:0,value(v){
       if(typeof v=='undefined'){return getter}
       if(!locked && !readonly && typeof v=='function' && v.length==1){getter = v}
       return this
     }})
-    Object.defineProperty(this,'setter',{enumerable:1,configurable:0,writable:0,value(){
+    Object.defineProperty(this,'setter',{enumerable:1,configurable:0,writable:0,value(v){
       if(typeof v=='undefined'){return setter}
       if(!locked && !readonly && typeof v=='function' && v.length==2){setter = v}
       return this
     }})
     Object.defineProperty(this,'value',{enumerable:1,configurable:0,
       get(){if(this.accessor=='public'){return getter(value)}},
-      set(v){if(!locked && !readonly && writable){value = setter(type(v),value)}}
+      set(v){if(!locked && !readonly && writable && this.accessor=='public'){value = setter(type(v),value)}}
     })
 
     Object.defineProperty(this,'lockConfiguration',{enumerable:1,configurable:0,writable:0,value(){Object.defineProperty(object,this.name,{configurable:0});return this}})
@@ -75,11 +76,15 @@ class Property{
     Object.defineProperty(object,this.name,{enumerable:enumerable,configurable:1,get:()=>this.value,set:(v)=>this.value=v})
 
     for(let i in properties){
-      if(i == 'name' || i == 'accessor' || (typeof this[i]=='undefined' && i != 'value')){continue}
-      this[i] = properties[i]
+      if(i == 'name' || i == 'accessor' || i== 'value' || typeof this[i.toLowerCase()]!='function'){continue}
+      console.log(i.toLowerCase(),this[i.toLowerCase()],properties[i])
+      this[i.toLowerCase()](properties[i])
     }
     if(this.container instanceof WeakMap){this.container.set(object,this.value)}
-    PropertyAccessor.set(this,()=>getter(value))
+    PropertyGetAccessor.set(this,()=>getter(value))
+    PropertySetAccessor.set(this,(v)=>{if(!locked && !readonly && writable){value=setter(type(v),value)}})
+
+    if(properties&&properties.value){value=setter(type(properties.value),value)}
   }
 
   inspect(){return this.value}
@@ -87,7 +92,8 @@ class Property{
   toJSON(){return this.value}
   valueOf(){return this.value}
 
-  static getValue(property){return PropertyAccessor.get(property)()}
+  static getValue(property){return PropertyGetAccessor.get(property)()}
+  static setValue(property,value){PropertySetAccessor.get(property)(value)}
 }
 
 class PropertyError extends Error{constructor(message){super(message);this.name='PropertyError';}}
