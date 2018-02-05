@@ -9,8 +9,8 @@ This node module allow programmers to use some of Object Oriented tecniques on J
 
 ## Getting Started
 ### Installing
-For install library is easy to install by cloning the repo. 
-You can install trhought npm too:
+This library is easy to install by cloning the repo or installing it through npm too:
+
 Local installation
 ```
 npm install aoop
