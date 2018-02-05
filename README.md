@@ -9,8 +9,8 @@ This node module allow programmers to use some of Object Oriented tecniques on J
 
 ## Getting Started
 ### Installing
-For install library is easy to install by cloning the repo. 
-You can install trhought npm too:
+This library is easy to install by cloning the repo or installing it through npm too:
+
 Local installation
 ```
 npm install aoop
@@ -38,7 +38,7 @@ const aoop = require('aoop');
 //}
 
 ```
-* **Mixin** `Mixin(class A,class B,[... classes])`
+* **Mixin**  `Mixin(class A,class B,[... classes])`
 
 This function takes all methods from two or more classes (or constructor functions) and create another one that inherits all of them from the mixins classes. Remember that the hierarchy of inheritance goes from left to right
 ```javascript
@@ -74,7 +74,7 @@ d.foo();  //foo
 d.bar();  //bar
 d.baz();  //Baz from B! (the Mixin(B,A) takes B > A hierachy)
 ```
-* **Interface** `Interface(proto, constrain)`
+* **Interface**  `Interface(proto, constrain)`
 
 This function constrain a constructor of a class (or a particular object) to have some methods defined in the `proto` argument. `constrain` argument tell the Interface to instanciate methods from his `proto` to the extended class.
 You can create an object from an Interface too using default methods described in the Interface `proto`. The Interface's instance constructor take a `force` argument to tell the instance to use Interface's `proto` defaults methods.
@@ -123,6 +123,72 @@ e.bye();  //good bye from E
 f.bye();  //good bye from Hello
 h.bye();  //good bye from Hello
 ```
+
+* **Property**  `Property(reference, properties)`
+
+This class allow to deal with a `reference` object property with some helping methods.
+
+A Property can change this descriptors with corresponding method:
+  - enumerable *( visibility in iterable objects and for loops )*
+  - writable *( possibility to change property value )*
+  - configurable *( possibility to change property descriptors )*
+
+A Property has some particular methods (accessor) to easily modify descriptors and value accessor:
+  - readonly *( possibility to chage descriptors )*
+  - lock / unlock *( possibility to change any descriptor or value accessor )*
+  - lockConfiguration *( locks property descriptors - WARN this operation can't be restored )*
+  - getter *( a function(value) that compute the reading value when requested - WARN the getter function must have exactly one parameter )*
+  - setter *( a function(newValue, oldValue) that compute writing value when requested - WARN the setter function must have exactly two parameters )*
+
+Every both descriptors and accessors methods have a getter and setter duality: if no argument is passed the function return the value, for example `property.enumerable()` return `true|false`. If an argument is passed the function set the correct value and then return th Property reference, making possible the concatention; for example `property.enumerable(true).writable(false).lock()`.
+
+For retrive a private property you need to store the Property reference and pass it to `Property.getValue(Property)` static method. To set a private property just pass the Property reference to `Property.setValue(Property, value)` and give it a value. Remember that descriptors and accessors still apply on those static methods.
+
+A Property can be forced to be of a certain type, a `Number` for example. It is possible to set a `type [function(value)]` to costrain the setted value to be parsed. It is possible to pass a string as `object|string|number|boolean|function|any` to force the value to those types or passing own function *( WARN the type function must have exactly one parameter )*.
+
+```javascript
+const { Property } = require('aoop');
+
+var x = {};
+var publicProp = 
+  new Property(x,{name:'public',value:4});
+var privateProp = 
+  new Property(x,{name:'private',value:'this is a private property',accessor:'private'})
+var publicProp2 = 
+  new Property(x,{name:'public2',value:'another public non writable property',writable:false})
+var publicProp3 = 
+  new Property(x,{name:'public3',value:'another public readonly property',readonly:true})
+
+console.log(x.public);  // 4
+console.log(x.public2);  // "another public non writable property"
+console.log(x.public3);  // "another public readonly property"
+console.log(x.private); // undefined
+console.log(Property.getValue(privateProp)) // "this is a private property"
+
+x.public = 5;
+x.public2 = 'I can\'t change non writtable property';
+x.public3 = 'I can\'t change readonly property';
+x.private = 'I can\'t change private property in this way';
+console.log(x.public);  // 5
+console.log(x.public2); // "another public non writable property"
+console.log(x.public3); // "another public readonly property"
+console.log(x.private); // undefined
+console.log(Property.getValue(privateProp)) // "this is a private property"
+
+publicProp.writable(false);
+publicProp2.writable(true);
+publicProp3.writable(true);
+x.public = 'Now I can\'t change this property';
+x.public2 = 'And now I can change this property';
+x.public3 = 'But still can\'t change this readonly property';
+Property.setValue(privateProp,'I can change private property so')
+console.log(x.public);  // 5
+console.log(x.public2);  // "And now I can change this property"
+console.log(x.public3);  // "another public readonly property"
+console.log(x.private); // undefined
+console.log(Property.getValue(privateProp)) // "I can change private property so"
+```
+
 * **Utils**
 This object is a library of some tools for deal with functions.
 
